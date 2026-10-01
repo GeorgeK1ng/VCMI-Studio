@@ -1,0 +1,6 @@
+# Keep this toolchain pinned: newer Python and PyInstaller versions no longer
+# target Windows 7. These versions also provide 64-bit CPython 3.8 wheels.
+PyInstaller==5.13.2
+Pillow==9.5.0
+pygame==2.5.2
+

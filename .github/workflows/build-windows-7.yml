@@ -1,0 +1,53 @@
+name: Build for Windows 7
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    name: Build Windows 7 package
+    runs-on: windows-2022
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      # Python 3.8 is intentionally used: it is the final CPython series that
+      # can run on Windows 7. Newer Python/PyInstaller releases target newer OSes.
+      - name: Set up Python 3.8
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.8.10"
+          architecture: x64
+          cache: pip
+          cache-dependency-path: requirements-windows-7.txt
+
+      - name: Install Windows 7 compatible build dependencies
+        shell: pwsh
+        run: python -m pip install --disable-pip-version-check -r requirements-windows-7.txt
+
+      - name: Check Python sources
+        shell: pwsh
+        run: python -m compileall -q VCMI_Studio.py VCMIS_tab_config_creature.py VCMIS_tab_Sprite_editor.py VCMIS_tab_townscreen.py
+
+      - name: Build application
+        shell: pwsh
+        run: python -m PyInstaller --noconfirm --clean VCMI-Studio.spec
+
+      - name: Create ZIP package
+        shell: pwsh
+        run: Compress-Archive -Path dist/VCMI-Studio -DestinationPath VCMI-Studio-Windows-7-x64.zip
+
+      - name: Upload package
+        uses: actions/upload-artifact@v4
+        with:
+          name: VCMI-Studio-Windows-7-x64
+          path: VCMI-Studio-Windows-7-x64.zip
+          if-no-files-found: error
+

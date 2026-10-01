@@ -36,3 +36,16 @@ There’s a built-in mask editor so you can draw the area/border. You can change
 - ```PyGame ≥ v2.0.0```
   
 3) Launch ```VCMI_Studio.py```
+
+## Windows 7 build
+
+The **Build for Windows 7** GitHub Actions workflow creates a 64-bit standalone
+ZIP package. Run it manually from the repository's **Actions** tab, or push a
+tag whose name starts with `v`. When the workflow finishes, download the
+`VCMI-Studio-Windows-7-x64` artifact and extract the ZIP before launching
+`VCMI-Studio.exe`.
+
+The Windows 7 build deliberately uses Python 3.8 and pinned dependency versions.
+Do not update the versions in `requirements-windows-7.txt` without testing the
+result on Windows 7. A current Microsoft Visual C++ 2015–2022 Redistributable
+and all available Windows 7 updates may be required on the target computer.
